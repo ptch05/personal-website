@@ -1,26 +1,500 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f4eee6;
+  --ink: #2b231d;
+  --muted: #6e6358;
+  --line: rgba(43, 35, 29, 0.2);
+  --accent: #8b2c1d;
+  --gold: #b39b6b;
+  --frame-bg: #1c1815;
+  --frame-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.1);
+  --content-width: 760px;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root[data-theme="dark"] {
+  --paper: #141210;
+  --ink: #e6dfd5;
+  --muted: #9e958a;
+  --line: rgba(230, 223, 213, 0.15);
+  --accent: #c95240;
+  --gold: #8c764a;
+  --frame-bg: #0a0807;
+  --frame-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    --paper: #141210;
+    --ink: #e6dfd5;
+    --muted: #9e958a;
+    --line: rgba(230, 223, 213, 0.15);
+    --accent: #c95240;
+    --gold: #8c764a;
+    --frame-bg: #0a0807;
+    --frame-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
   }
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: radial-gradient(circle at center, var(--paper) 0%, color-mix(in srgb, var(--paper) 95%, black 5%) 100%);
+  color: var(--ink);
+  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+  transition: background-color 400ms ease, color 400ms ease;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  transition: all 300ms ease;
+}
+
+a:hover {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.exhibition-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 4rem clamp(1.25rem, 4vw, 3rem) 8rem;
+}
+
+.museum-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 3rem;
+  margin-bottom: 5rem;
+  border-bottom: 2px solid var(--ink);
+  position: relative;
+}
+
+.museum-header::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--ink);
+}
+
+.artist-name {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  margin: 0;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.exhibition-meta {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.nav-links a { border: none; }
+.nav-links a:hover { background: none; color: var(--accent); }
+
+.theme-toggle {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--paper) 92%, var(--ink) 8%);
+  cursor: pointer;
+  color: var(--ink);
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.theme-glyph {
+  display: block;
+  width: 1rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.theme-glyph-moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-glyph-sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-glyph-moon {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-glyph-sun {
+    display: none;
+  }
+
+  :root:not([data-theme="light"]) .theme-glyph-moon {
+    display: block;
+  }
+}
+
+.plate-title {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-style: normal;
+  font-weight: 400;
+  margin: 0 0 2rem;
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+.justified-text {
+  margin: 0 0 1.5rem;
+  text-align: left;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.diptych {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+  margin-bottom: 7.5rem;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .diptych {
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 5rem;
+  }
+}
+
+.art-frame {
+  position: relative;
+  background: var(--frame-bg);
+  padding: 1.25rem;
+  box-shadow: var(--frame-shadow);
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+.art-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0.75rem;
+  border: 1px solid var(--gold);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.art-matte {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background: var(--paper);
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.art-image {
+  object-fit: cover;
+  transition: transform 700ms ease;
+}
+
+.art-matte-natural {
+  aspect-ratio: auto;
+}
+
+.art-image-natural {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.art-frame:hover .art-image {
+  transform: scale(1.02);
+}
+
+.plain-section {
+  max-width: var(--content-width);
+  margin: 0 auto 7.5rem 0;
+}
+
+.artwork-section {
+  max-width: 100%;
+  margin: 0 auto 7.5rem 0;
+}
+
+.artwork-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "st-pauls"
+    "waterfall"
+    "bus";
+  gap: 2rem;
+  align-items: start;
+}
+
+.artwork-grid .art-frame {
+  margin: 0;
+}
+
+.artwork-card {
+  padding: 0.5rem;
+}
+
+.artwork-card::before {
+  inset: 0.25rem;
+}
+
+.artwork-card:hover .art-image {
+  transform: none;
+}
+
+.artwork-st-pauls {
+  grid-area: st-pauls;
+}
+
+.artwork-waterfall {
+  grid-area: waterfall;
+}
+
+.artwork-bus {
+  grid-area: bus;
+}
+
+@media (min-width: 768px) {
+  .artwork-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "st-pauls waterfall"
+      "bus waterfall";
+  }
+}
+
+.manuscript-section {
+  margin-bottom: 7.5rem;
+  max-width: var(--content-width);
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.ledger-entry {
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.manuscript-section .ledger-entry:last-child {
+  margin-bottom: 0;
+}
+
+.brand-row {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+  margin-bottom: 1.25rem;
+}
+
+.company-mark {
+  display: grid;
+  width: 4.5rem;
+  aspect-ratio: 1;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #0b0b0b;
+}
+
+.company-icon {
+  display: block;
+  width: 3.75rem;
+  height: auto;
+  object-fit: contain;
+}
+
+.company-mark-csg {
+  background: #ffffff;
+}
+
+.ledger-heading-copy {
+  min-width: 0;
+}
+
+.ledger-entry > .ledger-heading-copy {
+  margin-bottom: 1.25rem;
+}
+
+.ledger-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  align-items: baseline;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.ledger-title {
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.ledger-date {
+  flex: 0 0 auto;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.ledger-deck {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.72rem;
+  font-style: normal;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.contribution-list {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.experience-summary {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.branded-entry > .experience-summary,
+.branded-entry > .contribution-list {
+  margin-left: 5.75rem;
+}
+
+.contribution-list li {
+  position: relative;
+  padding: 0.9rem 0 0.9rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.contribution-list li::before {
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  content: "—";
+}
+
+@media (max-width: 767px) {
+  .exhibition-container {
+    padding: 2.5rem 1.25rem 5rem;
+  }
+
+  .museum-header {
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.75rem 1rem;
+  }
+
+  .brand-row {
+    grid-template-columns: 3.75rem minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .company-mark {
+    width: 3.75rem;
+  }
+
+  .company-icon {
+    width: 3.2rem;
+    height: auto;
+  }
+
+  .branded-entry > .experience-summary,
+  .branded-entry > .contribution-list {
+    margin-left: 4.75rem;
+  }
+
+  .ledger-header {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .museum-header {
+    flex-direction: column;
+  }
+
+  .nav-links {
+    justify-content: flex-start;
+  }
 }
