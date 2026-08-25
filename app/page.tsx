@@ -1,6 +1,9 @@
 import Image from "next/image";
 import ThemeToggle from "./theme-toggle";
 
+const assetPath = (path: string) =>
+  `${process.env.PAGES_BASE_PATH ?? ""}${path}`;
+
 export default function Home() {
   return (
     <div className="exhibition-container">
@@ -48,7 +51,7 @@ export default function Home() {
           <div className="art-frame">
             <div className="art-matte art-matte-natural">
               <Image
-                src="/me.jpeg"
+                src={assetPath("/me.jpeg")}
                 alt="Portrait of Peiman Timaji"
                 width={1163}
                 height={1135}
@@ -78,7 +81,7 @@ export default function Home() {
             <div className="brand-row">
               <div className="company-mark">
                 <Image
-                  src="/protesyn.png"
+                  src={assetPath("/protesyn.png")}
                   alt="Protesyn logo"
                   width={48}
                   height={48}
@@ -136,7 +139,7 @@ export default function Home() {
             <div className="brand-row">
               <div className="company-mark">
                 <Image
-                  src="/lancy.png"
+                  src={assetPath("/lancy.png")}
                   alt="Lancy logo"
                   width={48}
                   height={48}
@@ -195,7 +198,7 @@ export default function Home() {
             <div className="brand-row">
               <div className="company-mark company-mark-csg">
                 <Image
-                  src="/csg.jpg"
+                  src={assetPath("/csg.jpg")}
                   alt="City St George's Racing Team logo"
                   width={907}
                   height={475}
@@ -275,7 +278,7 @@ export default function Home() {
             <figure className="art-frame artwork-card artwork-st-pauls">
               <div className="art-matte art-matte-natural">
                 <Image
-                  src="/st pauls.jpeg"
+                  src={assetPath("/st pauls.jpeg")}
                   alt="Architectural study of St Paul's Cathedral"
                   width={1058}
                   height={742}
@@ -288,7 +291,7 @@ export default function Home() {
             <figure className="art-frame artwork-card artwork-waterfall">
               <div className="art-matte art-matte-natural">
                 <Image
-                  src="/waterfall.jpeg"
+                  src={assetPath("/waterfall.jpeg")}
                   alt="Painting of a waterfall and rocky landscape"
                   width={2051}
                   height={2806}
@@ -301,7 +304,7 @@ export default function Home() {
             <figure className="art-frame artwork-card artwork-bus">
               <div className="art-matte art-matte-natural">
                 <Image
-                  src="/bus.jpeg"
+                  src={assetPath("/bus.jpeg")}
                   alt="Mixed-media drawing of buses on Tottenham Court Road"
                   width={2945}
                   height={2523}
